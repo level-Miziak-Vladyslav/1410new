@@ -163,26 +163,65 @@ namespace New1210.Domain
     {
         public void MainRun()
         {
-            Car c1 = new Car();
-            Console.WriteLine("Please input the name of car1");
-            c1.Name = Console.ReadLine();
-            Console.WriteLine("Please input price of car1");
-            c1.Price = double.Parse(Console.ReadLine());
+            int s = 0;
+            int d = 0;
+            int dc = 0;
+            int l = 0;
+            int a = 0;
+            int Qp = 0;
+            string[,] BasePeople = new string[1000, 2];
+            Console.WriteLine("Please input total number of student");
+            s = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input total number of Ph.D");
+            s = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input total number of professor assistant");
+            s = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input total number of lecturer");
+            s = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input total number of assistant");
+            s = int.Parse(Console.ReadLine());
+            BasePeople = MakePerson(s,d,dc,l,a,Qp, BasePeople);
+            DrawMatrix(BasePeople);
 
-
-            Car c2 = new Car();
-            Console.WriteLine("Please input the name of car2");
-            c2.Name = Console.ReadLine();
-            Console.WriteLine("Please input price of car2");
-            string s2 = Console.ReadLine();
-            double i2;
-            double.TryParse(s2, out i2);
-            c2.Price = i2;
-
-            Console.WriteLine("Name of car 1 {0}, Price car 1 {1}", c1.Name, c1.Price);
-            Console.WriteLine("Name of car 2 {0}, Price car 2 {1}", c2.Name, c2.Price);
         }
+        string[,] MakePerson(int s, int d, int dc, int l, int a, int Qp, string[,] BasePeople)
+        {
+            for (int i = 0; i < s; i++)
+            {
+                BasePeople[Qp, 0] = Qp.ToString() + "Student";
+                Qp++;
+            }
+            for (int i = 0; i < s; i++)
+            {
+                BasePeople[Qp, 0] = Qp.ToString() + "Ph.D";
+                Qp++;
+            }
+            for (int i = 0; i < s; i++)
+            {
+                BasePeople[Qp, 0] = Qp.ToString() + "Professor assistant";
+                Qp++;
+            }
+            for (int i = 0; i < s; i++)
+            {
+                BasePeople[Qp, 0] = Qp.ToString() + "Lecturer";
+                Qp++;
+            }
+            for (int i = 0; i < s; i++)
+            {
+                BasePeople[Qp, 0] = Qp.ToString() + "Assistant";
+                Qp++;
+            }
+            return BasePeople;
+        }        
     }
+
+    
+
+    
+
+    
+
+    
     #endregion
     public class Service
     {
