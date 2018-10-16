@@ -161,54 +161,73 @@ namespace New1210.Domain
     #region ITSchool
     public class ITSchool
     {
+        public static int Qp = 0;
         public void MainRun()
         {
+            Qp = 0;
             int s = 0;
             int d = 0;
             int dc = 0;
             int l = 0;
             int a = 0;
-            int Qp = 0;
+
             string[,] BasePeople = new string[1000, 2];
             Console.WriteLine("Please input total number of student");
             s = int.Parse(Console.ReadLine());
             Console.WriteLine("Please input total number of Ph.D");
-            s = int.Parse(Console.ReadLine());
+            d = int.Parse(Console.ReadLine());
             Console.WriteLine("Please input total number of professor assistant");
-            s = int.Parse(Console.ReadLine());
+            dc = int.Parse(Console.ReadLine());
             Console.WriteLine("Please input total number of lecturer");
-            s = int.Parse(Console.ReadLine());
+            l = int.Parse(Console.ReadLine());
             Console.WriteLine("Please input total number of assistant");
-            s = int.Parse(Console.ReadLine());
-            BasePeople = MakePerson(s,d,dc,l,a,Qp, BasePeople);
+            a = int.Parse(Console.ReadLine());
+            BasePeople = MakePerson(s,d,dc,l,a, BasePeople);
             DrawMatrix(BasePeople);
 
         }
-        string[,] MakePerson(int s, int d, int dc, int l, int a, int Qp, string[,] BasePeople)
+        public static void DrawMatrix(string[,] matrix)
         {
-            for (int i = 0; i < s; i++)
+            for (int i = 0; i < Qp; i++)
             {
-                BasePeople[Qp, 0] = Qp.ToString() + "Student";
-                Qp++;
+                for (int j = 0; j < 2; j++)
+                {
+                    Console.Write($"{(matrix[i, j].ToString().Length < 2 ? matrix[i, j].ToString() + "  |" : matrix[i, j].ToString() + " |")}");
+                }
+                Console.WriteLine();
             }
-            for (int i = 0; i < s; i++)
+        }
+
+        string[,] MakePerson(int s, int d, int dc, int l, int a, string[,] BasePeople)
+        {
+            for (int i = 0; i < (s+d+dc+l+a); i++)
             {
-                BasePeople[Qp, 0] = Qp.ToString() + "Ph.D";
-                Qp++;
-            }
-            for (int i = 0; i < s; i++)
-            {
-                BasePeople[Qp, 0] = Qp.ToString() + "Professor assistant";
-                Qp++;
-            }
-            for (int i = 0; i < s; i++)
-            {
-                BasePeople[Qp, 0] = Qp.ToString() + "Lecturer";
-                Qp++;
-            }
-            for (int i = 0; i < s; i++)
-            {
-                BasePeople[Qp, 0] = Qp.ToString() + "Assistant";
+                if(Qp < s)
+                {
+                    BasePeople[i, 0] = "Student # " + (Qp + 1).ToString();
+                    BasePeople[i, 1] = "Student";
+                }
+                else if(Qp < s + d)
+                {
+                    BasePeople[i, 0] = "Ph.D # " + (Qp + 1).ToString();
+                    BasePeople[i, 1] = "Ph.D";
+                }
+                else if (Qp < s + d + dc)
+                {
+                    BasePeople[i, 0] = "professor assistant # " + (Qp + 1).ToString();
+                    BasePeople[i, 1] = "professor assistant";
+                }
+                else if (Qp < s + d + dc + l)
+                {
+                    BasePeople[i, 0] = "lecturer # " + (Qp + 1).ToString();
+                    BasePeople[i, 1] = "lecturer";
+                }
+                else 
+                {
+                    BasePeople[i, 0] = "assistant # " + (Qp + 1).ToString();
+                    BasePeople[i, 1] = "assistant";
+                }
+
                 Qp++;
             }
             return BasePeople;
