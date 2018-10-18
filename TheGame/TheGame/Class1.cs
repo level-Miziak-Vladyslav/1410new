@@ -9,54 +9,62 @@ namespace ConsoleApp1
     class Game
     {
         Player[] pa;
+        public static int start = 40, finish = 140;
         public Game(int sp, int pn, int pu, int pc, int puc)
         {
-            Field f = new Field(0, 100);
+
+            Field f = new Field(start, finish);
             pa = new Player[sp + pn + pu + pc + puc];
             for (int i = 0; i < (sp + pn + pu + pc + puc); i++)
             {
                 if (i < sp)
                 {
                     pa[i] = new Player();
-                    pa[i].PlayerNew("Player type Player # " + (i + 1).ToString(), 1);
-                }
-                if (i < (sp+pn))
+                    pa[i].PlayerNew("Player # " + (i + 1).ToString(), 1);
+                }else if (i < (sp+pn))
                 {
                     pa[i] = new PlayerNote();
-                    pa[i].PlayerNew("Player type PlayerNote # " + (i + 1).ToString(), 2);
-                }
-                if (i < (sp + pn + pu))
+                    pa[i].PlayerNew("PlayerNote # " + (i + 1).ToString(), 2);
+                }else if (i < (sp + pn + pu))
                 {
                     pa[i] = new PlayerUber();
-                    pa[i].PlayerNew("Player type PlayerUber # " + (i + 1).ToString(), 3);
-                }
-                if (i < (sp + pn + pu +pc))
+                    pa[i].PlayerNew("PlayerUber # " + (i + 1).ToString(), 3);
+                }else if (i < (sp + pn + pu +pc))
                 {
                     pa[i] = new PlayerCheater();
-                    pa[i].PlayerNew("Player type PlayerCheater # " + (i + 1).ToString(), 4);
+                    pa[i].PlayerNew("PlayerCheater # " + (i + 1).ToString(), 4);
                 }
                 else
                 {
                     pa[i] = new PlayerUberCheater();
-                    pa[i].PlayerNew("Player type PlayerUberCheater # " + (i + 1).ToString(), 5);
+                    pa[i].PlayerNew("PlayerUberCheater # " + (i + 1).ToString(), 5);
                 }
             }
-            for (int i = 0; i < 100; i++)
+            try
             {
-                Console.WriteLine("Turn " + i);
-                foreach (Player p in pa)
+                for (int i = 0; i < 100; i++)
                 {
-                    int n = 0;
-                    if (f.isprize(n = p.rolldice(f)) == true)
+                    System.Threading.Thread.Sleep(100);
+                    Console.WriteLine("Turn " + i);
+                    foreach (Player p in pa)
                     {
-                        Console.WriteLine("Victory player {0} with number {1}", p.name, n);
-                        break;
+                        System.Threading.Thread.Sleep(100);
+                        int n = 0;
+                        if (f.isprize(n = p.rolldice(f)) == true)
+                        {
+                            Console.WriteLine("Victory {0} with number {1}", p.name, n);
+                            throw new Exception();
+                        }
+                        else
+                        {
+                            Console.WriteLine("        {0} overshot with number {1} ", p.name, n);
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine("Player {0} overshot with number {1} ", p.name, n);
-                    }
-                 }
+                }
+            }
+            catch
+            {
+
             }
         }
     }
@@ -71,16 +79,46 @@ namespace ConsoleApp1
         public virtual int rolldice(Field f)
         {
             Random rand = new Random();
-            return rand.Next(0, f.fi.Length);
+            return rand.Next(f.start, f.finish);
         }
     }
     class PlayerNote : Player
     {
-        int[] p = new int[51];//проверенные им числа
+        int[] p = new int[100];//проверенные им числа
+        int i = 0; //счетчик ходов
+        bool y = true;
+        bool fr = true;
+        int x;
         public override int rolldice(Field f)
         {
             Random rand = new Random();
-            return rand.Next(0, f.fi.Length);
+            if (!fr)
+            {
+                do
+                {
+                    x = rand.Next(f.start, f.finish);
+
+                    for (int ii = 0; ii < i; ii++)
+                    {
+                        if (p[ii] != x)
+                        {
+                            y = ii + 1 != i;
+                        }
+                    }
+
+                } while (y);
+                p[i] = x;
+                i++;
+                return x;
+            }
+            else
+            {
+                x = rand.Next(f.start, f.finish);
+                fr = false;
+                p[i] = x;
+                i++;
+                return x;
+            }
         }
     }
     class PlayerUber : Player
@@ -88,25 +126,56 @@ namespace ConsoleApp1
         int l = 0; //последнее проверенное им число
         public override int rolldice(Field f)
         {
-            Random rand = new Random();
-            return rand.Next(0, f.fi.Length);
+            return f.start + l++;
         }
     }
     class PlayerCheater : Player
     {
+        bool y = true;
+        int x;
         public override int rolldice(Field f)
         {
+            int[,] p = f.fi;
             Random rand = new Random();
-            return rand.Next(0, f.fi.Length);
+            if (p.Length!=0)
+            {
+                do
+                {
+                    x = rand.Next(f.start, f.finish);
+                    y = (p[x - f.start, 1] == x) && (p[x - f.start, 2] == 1);
+                } while (y);
+                return x;
+            }
+            else
+            {
+                x = rand.Next(f.start, f.finish);
+                return x;
+            }
         }
     }
     class PlayerUberCheater : Player
     {
         int l = 0; //последнее проверенное им число
+        bool y = true;
+        int x;
         public override int rolldice(Field f)
         {
-            Random rand = new Random();
-            return rand.Next(0, f.fi.Length);
+            int[,] p = f.fi;
+            x = l;
+            if (p.Length != 0)
+            {
+                do
+                {
+                    x++;
+                    y = (p[x, 1] == x + f.start) && (p[x, 2] == 1);
+                } while (y);
+                l = x;
+                return x + f.start;
+            }
+            else
+            {
+                return x + f.start;
+            }
         }
     }
     struct Field
@@ -114,8 +183,12 @@ namespace ConsoleApp1
         public int[,] fi;
         int prize;
         public int length;
+        public int start;
+        public int finish;
         public Field(int s, int f)
         {
+            start = s;
+            finish = f;
             length = f - s;
             fi = new int[length, 3];
             for (int i = 0; i < length; i++)
@@ -126,11 +199,12 @@ namespace ConsoleApp1
             }
             Random rand = new Random();
             prize = rand.Next(s, f);
+            System.Threading.Thread.Sleep(1000);
         }
         public bool isprize(int t)
         {
-            Console.WriteLine(t);
-            fi[t - length, 2] = 1;
+            fi[t - start, 2] = 1;
+            Console.WriteLine("                                                prize "+prize+" t "+t);
             return t == prize;
         }
     }
