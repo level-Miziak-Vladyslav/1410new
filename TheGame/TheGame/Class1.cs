@@ -70,6 +70,8 @@ namespace ConsoleApp1
     }
     class Player
     {
+        protected int i = 0; //счетчик ходов
+        protected int[] p = new int[100];//проверенные им числа
         public string name;
         public void PlayerNew(string n, int role)
         {
@@ -79,13 +81,13 @@ namespace ConsoleApp1
         public virtual int rolldice(Field f)
         {
             Random rand = new Random();
+            i++;
             return rand.Next(f.start, f.finish);
         }
     }
     class PlayerNote : Player
     {
-        int[] p = new int[100];//проверенные им числа
-        int i = 0; //счетчик ходов
+
         bool y = true;
         bool fr = true;
         int x;
@@ -126,6 +128,7 @@ namespace ConsoleApp1
         int l = 0; //последнее проверенное им число
         public override int rolldice(Field f)
         {
+            i++;
             return f.start + l++;
         }
     }
@@ -144,11 +147,13 @@ namespace ConsoleApp1
                     x = rand.Next(f.start, f.finish);
                     y = (p[x - f.start, 1] == x) && (p[x - f.start, 2] == 1);
                 } while (y);
+                i++;
                 return x;
             }
             else
             {
                 x = rand.Next(f.start, f.finish);
+                i++;
                 return x;
             }
         }
@@ -170,10 +175,12 @@ namespace ConsoleApp1
                     y = (p[x, 1] == x + f.start) && (p[x, 2] == 1);
                 } while (y);
                 l = x;
+                i++;
                 return x + f.start;
             }
             else
             {
+                i++;
                 return x + f.start;
             }
         }
