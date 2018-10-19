@@ -11,7 +11,17 @@ namespace TheGame
     {
         static void Main(string[] args)
         {
-            Game a = new Game(1, 1, 1, 1, 1);
+            Console.WriteLine("Please input number of Player Simple");
+            int b = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input number of PlayerNote");
+            int c = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input number of PlayerUber");
+            int d = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input number of PlayerCheater");
+            int e = int.Parse(Console.ReadLine());
+            Console.WriteLine("Please input number of PlayerUberCheater");
+            int f = int.Parse(Console.ReadLine());
+            Game a = new Game(b, c, d, e, f);
         }
     }
 }
