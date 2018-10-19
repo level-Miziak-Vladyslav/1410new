@@ -46,7 +46,6 @@ namespace ConsoleApp1
                 {
                     System.Threading.Thread.Sleep(100);
                     Console.WriteLine("Turn " + i);
-                    int turn = 0;
                     foreach (Player p in pa)
                     {
                         System.Threading.Thread.Sleep(100);
@@ -59,9 +58,6 @@ namespace ConsoleApp1
                         else
                         {
                             Console.WriteLine("        {0} overshot with number {1} ", p.name, n);
-                            p.shoot[i, 0] = turn;
-                            p.shoot[i, 1] = n;
-
                         }
                     }
                 }
@@ -74,13 +70,11 @@ namespace ConsoleApp1
     }
     class Player
     {
-        public int[,] shoot;
         public string name;
         public void PlayerNew(string n, int role)
         {
             name = n;
             int type = role;
-            shoot = new int[100, 2];
         }
         public virtual int rolldice(Field f)
         {
