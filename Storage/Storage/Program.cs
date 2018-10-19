@@ -10,6 +10,8 @@ namespace Storage
     {
         static void Main(string[] args)
         {
+            MaineStorage a = new MaineStorage(5);
+            SLoad(a, 3);
         }
     }
 }

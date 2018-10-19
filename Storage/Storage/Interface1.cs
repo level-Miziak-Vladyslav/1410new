@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Storage
 {
-    interface Interface1
+    interface IProduct
     {
+        string Name { get; set; }
+        double Price { get; set; }
+        int ShelfLife { get; set; }
     }
 }
