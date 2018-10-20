@@ -9,10 +9,10 @@ namespace ConsoleApp1
     class Game
     {
         Player[] pa;
-        public static int start = 40, finish = 140;
+        public static int start = 40, finish = 1400;
         public Game(int sp, int pn, int pu, int pc, int puc)
         {
-
+            int[,] sg;
             Field f = new Field(start, finish);
             pa = new Player[sp + pn + pu + pc + puc];
             for (int i = 0; i < (sp + pn + pu + pc + puc); i++)
@@ -42,7 +42,7 @@ namespace ConsoleApp1
             }
             try
             {
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 100;)
                 {
                     System.Threading.Thread.Sleep(100);
                     Console.WriteLine("Turn " + i);
@@ -57,9 +57,37 @@ namespace ConsoleApp1
                         }
                         else
                         {
-                            Console.WriteLine("        {0} overshot with number {1} ", p.name, n);
+                            i++;
+                            Console.WriteLine("  {0} overshot with number {1}", p.name, n);
+                            if (i == 99)
+                            {
+                                Console.WriteLine("SuperGame");
+                                int e = f.finish - f.start;
+                                foreach (Player pp in pa)
+                                {
+                                    int d = f.finish - f.start;
+                                    foreach (int j in pp.p)
+                                    {
+                                        d = f.SuperGame(j) < d ? (d = f.SuperGame(j)) : d;
+                                        pp.bs = d;
+                                    }
+                                    if (d < e)
+                                    {
+                                        e = d;
+                                    }
+                                }
+                                foreach (Player pp in pa)
+                                {
+                                    if (pp.bs == e)
+                                    {
+                                        Console.WriteLine("{0} win SuperGame won with an error {1}", pp.name, pp.bs);
+                                    }
+                                }
+                                throw new Exception();
+                            }
                         }
                     }
+
                 }
             }
             catch
@@ -71,7 +99,8 @@ namespace ConsoleApp1
     class Player
     {
         protected int i = 0; //счетчик ходов
-        protected int[] p = new int[100];//проверенные им числа
+        public int[] p = new int[100];//проверенные им числа
+        public int bs;
         public string name;
         public void PlayerNew(string n, int role)
         {
@@ -82,7 +111,7 @@ namespace ConsoleApp1
         {
             Random rand = new Random();
             i++;
-            return rand.Next(f.start, f.finish);
+            return (p[i-1] = rand.Next(f.start, f.finish));
         }
     }
     class PlayerNote : Player
@@ -109,17 +138,15 @@ namespace ConsoleApp1
                     }
 
                 } while (y);
-                p[i] = x;
                 i++;
-                return x;
+                return (p[i-1] = x);
             }
             else
             {
                 x = rand.Next(f.start, f.finish);
                 fr = false;
-                p[i] = x;
                 i++;
-                return x;
+                return (p[i-1] = x);
             }
         }
     }
@@ -129,7 +156,7 @@ namespace ConsoleApp1
         public override int rolldice(Field f)
         {
             i++;
-            return f.start + l++;
+            return (p[i - 1] = f.start + l++);
         }
     }
     class PlayerCheater : Player
@@ -138,23 +165,23 @@ namespace ConsoleApp1
         int x;
         public override int rolldice(Field f)
         {
-            int[,] p = f.fi;
+            int[,] pz = f.fi;
             Random rand = new Random();
             if (p.Length!=0)
             {
                 do
                 {
                     x = rand.Next(f.start, f.finish);
-                    y = (p[x - f.start, 1] == x) && (p[x - f.start, 2] == 1);
+                    y = (pz[x - f.start, 1] == x) && (pz[x - f.start, 2] == 1);
                 } while (y);
                 i++;
-                return x;
+                return (p[i-1] = x);
             }
             else
             {
                 x = rand.Next(f.start, f.finish);
                 i++;
-                return x;
+                return (p[i-1] = x);
             }
         }
     }
@@ -165,23 +192,23 @@ namespace ConsoleApp1
         int x;
         public override int rolldice(Field f)
         {
-            int[,] p = f.fi;
+            int[,] pz = f.fi;
             x = l;
             if (p.Length != 0)
             {
                 do
                 {
                     x++;
-                    y = (p[x, 1] == x + f.start) && (p[x, 2] == 1);
+                    y = (pz[x, 1] == x + f.start) && (pz[x, 2] == 1);
                 } while (y);
                 l = x;
                 i++;
-                return x + f.start;
+                return (p[i - 1] = x + f.start);
             }
             else
             {
                 i++;
-                return x + f.start;
+                return (p[i - 1] = x + f.start);
             }
         }
     }
@@ -207,6 +234,10 @@ namespace ConsoleApp1
             Random rand = new Random();
             prize = rand.Next(s, f);
             System.Threading.Thread.Sleep(1000);
+        }
+        public int SuperGame(int l)
+        {
+            return ((l - prize) > 0 ? (l - prize) : (-l + prize));
         }
          public bool isprize(int t)
         {
