@@ -264,14 +264,14 @@ namespace New1210.Domain
             {
                 if (i == fh)
                 {
-                    Console.WriteLine("No free teachers, students without group: {}",fs);
+                    Console.WriteLine("No free teachers, students without group: {}", fs);
                     break;
                 }
-                g[i] = new ITGroup(BasePeople[(Qp-i-1),1]);
+                g[i] = new ITGroup(BasePeople[(Qp - i - 1), 1]);
                 int rs = s - fs;
                 for (int p = rs; p < (g[i].Qs + rs); p++)
                 {
-                     g[i].sl[p - rs] = BasePeople[p, 0];
+                    g[i].sl[p - rs] = BasePeople[p, 0];
                     BasePeople[p, 2] = g[i].HeadName;
                 }
                 fs = fs - g[i].Qs;
