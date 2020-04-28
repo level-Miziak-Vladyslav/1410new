@@ -13,7 +13,7 @@ namespace test
 
         public static void Main(string[] args)
         {
-            Console.WriteLine(DateTime.Now.ToShortDateString());
+            Console.WriteLine(DateTime.Now.ToShortTimeString());
 
             Process();
 
